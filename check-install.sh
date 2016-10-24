@@ -14,3 +14,9 @@ printf "============================\n"
 find /usr/local/bin/ -name "click*"
 printf "\n"
 click --version
+
+printf "\nClicky tool\n"
+printf "============================\n"
+find /usr/local/bin/ -name "clicky*"
+printf "\n"
+clicky --version

@@ -1,9 +1,9 @@
 
-# click router presentation
+# Click router presentation
 
 ## Quick description
 
-### ßackground
+### Background
 
 Most routers have closed, static, and inflexible designs.
 
@@ -15,7 +15,7 @@ Click routers are built from fine-grained components.
 The components are packet processing modules called elements.
 
 
-### Description
+### Description
 
 Click is a modular router toolkit.
 
@@ -33,6 +33,8 @@ A click router configuration is an oriented graph of element where:
 * edges: connections between ports and elements
 
 To build a router configuration, the user chooses a collection of elements and connects them into a directed graph.
+
+The router configuration is written in the Click language.
 
 To extend a configuration, the user can write new elements or compose existing elements in new ways.
 
@@ -70,24 +72,27 @@ http://read.cs.ucla.edu/click/docs/userdriver
 click CONFIGFILE [ -p port]
 ```
 
-### Kernel driver
+### Kernel driver
 
-WARNING : ''The Linux kernel module is known to run (but not necessarily route packets) in kernel versions 2.6.24, 2.6.32, 3.0, 3.2, and 3.5. It should run on intermediate versions as well.'' '''compilation will fail with linux kernek 4.x'''
+The Click modular router can be compiled as a Linux kernel module, called click.ko. To install a configuration and load the click kernel module it is required to use :
 
-WARNING2 : ''Click linux kernel has been successfully built using ubuntu server 14.04.1 with a kernel 3.13''
-NB since click commit c91fc67e3db click no more compile on ubuntu !
+```bash
+click-install CONFIGFILE
+```
 
-
-The Click modular router can be compiled as a Linux kernel module, called click.ko. To install a configuration and load the click kernel module it is required to use `click-install CONFIGFILE`.
-
-NB The click-install executable installs the module if necessary, mounts the Click file system onto the /click directory, and installs a configuration.
+NB The click-install executable installs the module if necessary, mounts the Click file system onto the /click directory, and installs a configuration (NB  click-install installs a router configuration by writing it to /click/config or /click/hotconfig).
 
 The linux kernel driver can steal packets from network devices before Linux gets a chance to handle them, send packets directly to devices, and send packets to Linux for normal processing.
 
+**WARNING** : The Linux kernel module is known to run (but not necessarily route packets) in kernel versions 2.6.24, 2.6.32, 3.0, 3.2, and 3.5. It should run on intermediate versions as well. *compilation will fail with linux kernek 4.x*
 
-# click installation
+**WARNING2** : Click linux kernel has been successfully built using ubuntu server 14.04.1 with a kernel 3.13
+NB since click commit c91fc67e3db click no more compile on ubuntu !
 
-## click sources
+
+# Click installation
+
+## Click sources
 
 Git repository : https://github.com/kohler/click/ includes sources from click project with the following structure:
 
@@ -115,12 +120,12 @@ $ git clone https://github.com/kohler/click.git
 $ cd click
 
 $ ### to display config options
-$ ### ./configure --help
+$./configure --help
 
-$ ### config to build click for user mode only
+$ ### config to build click for user mode only
 $ ./configure --enable-ip6 --disable-linuxmodule
 
-$ ### config to build click for user & kernel mode using all available click elements
+$ ### config to build click for user & kernel mode using all available click elements
 $ sudo ./configure --enable-all-elements
 
 $ sudo make install
@@ -136,12 +141,13 @@ $ find /usr/local/sbin/ -name "click*"
 
 ```
 
-# click use
+# Click use
 
-## Test click
+## Test Click
 
 Click configurations for test : In the conf directory of the click git repo there is a set of configuration files see http://read.cs.ucla.edu/click/examples
 
+### userlevel driver
 
 For instance, you can run the following to test a basic click configuration running at userlevel
 
@@ -155,16 +161,26 @@ NB : To run a click configuration using a system device (e.g FromDevice(eth0)), 
 $ sudo click ~/click/conf/delay.click
 ```
 
-For instance, you can run the following to test a basic click configuration running in kernel mode
+### kernel driver
+
+For instance, you can run the following to test a basic click configuration running in **kernel mode**
 
 ```bash
 $ sudo click-install ~/click/conf/testdevice.click
 ```
 
+The configuration installed in kernel is visible in the <tt>/click</tt> directory
 
-## click documentation
+The command <code>click-uninstall</code> unload the click module and remove the current configuration (the <tt>/click</tt> directory it then empty).
 
-All click documentation is also available directly at the system level
+```bash
+$ sudo click-uninstall
+```
+
+
+## Click documentation
+
+All Click documentation is also available directly at the system level
 
 ```bash
 man click : display manual page about click userlevel driver
@@ -183,4 +199,55 @@ NB This documentation is also online
 + http://read.cs.ucla.edu/click/elements/controlsocket
 
 
+
+## GUI Tool : Clicky
+
+Clicky is a Click GUI using the GTK+ toolkit : http://read.cs.ucla.edu/click/clicky
+
+Clicky can show Click configurations as text (with syntax highlighting) or diagrams, and can read and write handlers in live configurations. It can also generate output diagrams in PDF format.
+
+### Installation
+
+```bash
+$  cd ~/click/apps/clicky
+$  sudo apt-get -y install autoconf libgtk2.0-dev graphviz
+$  autoreconf -i
+$  ./configure
+$  sudo make install
+```
+
+### Using Clicky
+
+
+You can run the following to test clicky:
+
+```bash
+$ clicky -r click/conf/test-clicky.click &
+```
+
+To run a click configuration using system ressource (as network interface ethx e.g FromDevice(eth0)) you need to run the command with root privileges =>
+```bash
+$  sudo clicky -r ~/click/conf/delay.click
+```
+
+Clicky GUI can show Click configurations as text (View configuration menu) and/or diagrams (View Diagram menu).
+
+In the view menu, it's also possible to choose to display additional sidebars  :
+* List : left sidebar showing the list of all elements included in the configuration
+* Element : right sidebar showing details of the currently selected element in the diagram view or in the list sidebar.
+
+The toolbar allows to control the click engine (start, stop, restart).
+
+The Configuration/Check for Errors menu allows to syntactically check the current configuration.
+
+It is also possible to use clicky to display kernel driver configuration currently installed (using -k option)
+
+```bash
+$ clicky -k &
+```
+
+Clicky options:
+ * -r option : open the specified click configuration with clicky and run userlevel click engine with it
+ * -f option  : open the specified click configuration with clicky (show the configuration graph) without running it.
+ * -k : Read configuration from kernel.
 
