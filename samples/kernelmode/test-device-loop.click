@@ -15,5 +15,5 @@
 // The most recent 2-4K of messages are stored in /click/messages (still working ?).
 
 define($DEV eth1);
-Message("Block traffic on $DEV");
-FromDevice($DEV) -> Print(in) -> Discard;
+Message("Loop traffic on $DEV");
+FromDevice($DEV) -> Print(in) -> ToHost($DEV);

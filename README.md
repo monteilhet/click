@@ -1,5 +1,5 @@
 
-# Click router presentation
+# Click router
 
 ## Quick description
 
@@ -90,9 +90,9 @@ The linux kernel driver can steal packets from network devices before Linux gets
 NB since click commit c91fc67e3db click no more compile on ubuntu !
 
 
-# Click installation
+## Click installation
 
-## Click sources
+### Click sources
 
 Git repository : https://github.com/kohler/click/ includes sources from click project with the following structure:
 
@@ -110,7 +110,7 @@ Git repository structure:
  `-- userlevel           // Click user level files
 ```
 
-## Build
+### Build
 
 
 ```bash
@@ -141,13 +141,13 @@ $ find /usr/local/sbin/ -name "click*"
 
 ```
 
-# Click use
+## Using Click
 
-## Test Click
+### Click Test
 
 Click configurations for test : In the conf directory of the click git repo there is a set of configuration files see http://read.cs.ucla.edu/click/examples
 
-### userlevel driver
+#### userlevel driver
 
 For instance, you can run the following to test a basic click configuration running at userlevel
 
@@ -161,7 +161,7 @@ NB : To run a click configuration using a system device (e.g FromDevice(eth0)), 
 $ sudo click ~/click/conf/delay.click
 ```
 
-### kernel driver
+#### kernel driver
 
 For instance, you can run the following to test a basic click configuration running in **kernel mode**
 
@@ -250,4 +250,38 @@ Clicky options:
  * -r option : open the specified click configuration with clicky and run userlevel click engine with it
  * -f option  : open the specified click configuration with clicky (show the configuration graph) without running it.
  * -k : Read configuration from kernel.
+
+##  click concepts
+
+click router : Extensible toolkit for writing packet processors
+
+Architecture centered on elements
+ * Small building blocks
+ * Perform simple operations e.g. decrease TTL
+
+Click routers : Directed graphs of elements
+
++ Router: Elements connected by edges
++ Output ports to input ports
++ Describes possible packet flows
+
+Ports:
+ * Push port: Source initiates packet transfer: event based packet flow
+ * Pull port: Destination initiates packet transfer (Used with polling, scheduling,...)
+ * Agnostic port: Becomes push or pull
+
+Compound elements:
+ * Group elements in larger elements
+
+
+Elements (actually element classes): C++ classes
+Element instantations: C++ objects
+Click router configurations (or short Click routers): text files parsed when starting Click, Click builds object graph of elements
+
+Handlers:
+ * Like function calls to an element
+ * ReadHandler: request a value from an element
+ * WriteHandler: pass a string to an element
+   NB (There is no ReadWriteHandler: you can’t call a ReadHandler with arguments)
+ * Can be called from other elements or through socket
 

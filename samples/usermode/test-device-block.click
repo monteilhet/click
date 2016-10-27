@@ -15,4 +15,4 @@ Message("Block traffic on $DEV");
 // Message("use config DEV = $DEV");
 
 KernelFilter(drop dev $DEV)
-FromDevice($DEV) -> Print(ok) -> Discard;
+FromDevice($DEV) -> Print(in) -> Discard;
