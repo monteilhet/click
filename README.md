@@ -61,6 +61,8 @@ To extend a configuration, the user can write new elements or compose existing e
 
 Click can be compiled as a user-level program or as a kernel module for Linux
 
+[Kernel vs User mode details](Kernel_vs_User.md)
+
 ### User-Level Program
 
 User-Level Program: the user-level driver uses packet sockets (on Linux) or the pcap library (everywhere else).
@@ -277,6 +279,11 @@ Compound elements:
 Elements (actually element classes): C++ classes
 Element instantations: C++ objects
 Click router configurations (or short Click routers): text files parsed when starting Click, Click builds object graph of elements
+
+Packets
+Packet consists of payload and annotations (metadata to simplify processing as "post-its" )
++ payload: raw bytes (char*)
++ annotations : packet offset designating IP header, or user defined
 
 Handlers:
  * Like function calls to an element
