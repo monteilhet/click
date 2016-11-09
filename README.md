@@ -34,7 +34,7 @@ A click router configuration is an oriented graph of element where:
 
 To build a router configuration, the user chooses a collection of elements and connects them into a directed graph.
 
-The router configuration is written in the Click language.
+The router configuration is written in the Click language (http://read.cs.ucla.edu/click/docs/language).
 
 To extend a configuration, the user can write new elements or compose existing elements in new ways.
 
@@ -61,14 +61,11 @@ To extend a configuration, the user can write new elements or compose existing e
 
 Click can be compiled as a user-level program or as a kernel module for Linux
 
-[Kernel vs User mode details](Kernel_vs_User.md)
+cf **[Kernel vs User mode details](Kernel_vs_User.md)**
 
 ### User-Level Program
 
-User-Level Program: the user-level driver uses packet sockets (on Linux) or the pcap library (everywhere else).
 Run the user-level program by giving it the name of a configuration
-
-http://read.cs.ucla.edu/click/docs/userdriver
 
 ```bash
 click CONFIGFILE [ -p port]
@@ -76,15 +73,12 @@ click CONFIGFILE [ -p port]
 
 ### Kernel driver
 
-The Click modular router can be compiled as a Linux kernel module, called click.ko. To install a configuration and load the click kernel module it is required to use :
+To install a configuration and load the click kernel module it is required to use :
 
 ```bash
 click-install CONFIGFILE
 ```
 
-NB The click-install executable installs the module if necessary, mounts the Click file system onto the /click directory, and installs a configuration (NB  click-install installs a router configuration by writing it to /click/config or /click/hotconfig).
-
-The linux kernel driver can steal packets from network devices before Linux gets a chance to handle them, send packets directly to devices, and send packets to Linux for normal processing.
 
 **WARNING** : The Linux kernel module is known to run (but not necessarily route packets) in kernel versions 2.6.24, 2.6.32, 3.0, 3.2, and 3.5. It should run on intermediate versions as well. *compilation will fail with linux kernek 4.x*
 
@@ -135,12 +129,14 @@ $ sudo make install
 $ ### click binaries are installed in /usr/local/bin/
 $ find /usr/local/bin/ -name "click*"
 
+_NB The kernel installation will create two module object files click.ko and proclikefs.ko and place them in the installation directory /usr/local/lib._
+
+
 ### Display version of installed click
 $ click -v
 
 ### List click tools available for kernel driver
 $ find /usr/local/sbin/ -name "click*"
-
 ```
 
 ## Using Click
@@ -173,10 +169,10 @@ $ sudo click-install ~/click/conf/testdevice.click
 
 The configuration installed in kernel is visible in the <tt>/click</tt> directory
 
-The command <code>click-uninstall</code> unload the click module and remove the current configuration (the <tt>/click</tt> directory it then empty).
+The command <code>click-uninstall</code> unload the click module and remove the current configuration (the <tt>/click</tt> directory, then is empty).
 
 ```bash
-$ sudo click-uninstall
+$ sudo click-uninstalls
 ```
 
 
@@ -206,6 +202,8 @@ NB This documentation is also online
 
 Clicky is a Click GUI using the GTK+ toolkit : http://read.cs.ucla.edu/click/clicky
 
+![clicky GUI](img/clicky-test.png)
+
 Clicky can show Click configurations as text (with syntax highlighting) or diagrams, and can read and write handlers in live configurations. It can also generate output diagrams in PDF format.
 
 ### Installation
@@ -231,6 +229,7 @@ To run a click configuration using system ressource (as network interface ethx e
 ```bash
 $  sudo clicky -r ~/click/conf/delay.click
 ```
+
 
 Clicky GUI can show Click configurations as text (View configuration menu) and/or diagrams (View Diagram menu).
 

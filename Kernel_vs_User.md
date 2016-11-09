@@ -1,5 +1,5 @@
 
-[Main](https://github.com/monteilhet/clicks)
+[Main](https://github.com/monteilhet/click)
 
 # Difference between user and kernel mode
 
@@ -8,13 +8,17 @@ Click can be compiled as a user-level program or as a kernel module for Linux. E
 
 ## User level driver
 
-
+http://read.cs.ucla.edu/click/docs/userdriver
 
 The click driver (click executable) executes a Click modular router specification in a user-level program. For instance run the user-level program by giving it the name of a configuration file: `click CONFIGFILE`.
 
 Then it reads the router configuration file, sets up the router according to that file, and generally continues until interrupted. The router configuration is written in the Click language.
 
-The click program can read and write packets from the network using Berkeley Packet Filters. User-level `FromDevice` element behaves like a packet sniffer by default since each packet will get processed twice (once by Click, once by the kernel).
+The user-level driver uses packet sockets (on Linux) or the pcap library (everywhere else).
+The click program can read and write packets from the network using Berkeley Packet Filters.
+User-level `FromDevice` element behaves like a packet sniffer by default since each packet will get processed twice (once by Click, once by the kernel).
+
+
 
 Within the user-level driver, `FromDevice` and `ToDevice` elements used are specific to this mode ( implementation of those elements are located in <tt>elements/userlevel</tt> )
 
@@ -38,18 +42,27 @@ The click userlevel driver can run a configuration including a `ControlSocket` e
 
 ## Kernel driver
 
+http://read.cs.ucla.edu/click/docs/linuxmodule
+
 Click also can run inside a Linux kernel as a module.
 
-The Click modular router can be compiled as a Linux kernel module, called click.ko.
+The Click modular router can be compiled as a Linux kernel module, called _click.ko_. Kernel build also produces another kernel module _proclikefs.ko_ taking  charge of the Click filesystem.
+
 To install a configuration and load the click kernel module it is required to use <code>click-install CONFIGFILE</code>.
 
 The click-install executable installs the module if necessary, mounts the Click file system onto the /click directory, and installs a configuration.
 
 The module's API is a filesystem similar to the proc filesystem. Click creates a number of files under /click, some read-only and some read/write. You control the module by writing to these files, which are called handlers.
 
-The linux kernel driver can steal packets from network devices before Linux gets a chance to handle them, send packets directly to devices, and send packets to Linux for normal processing.
+NB click-install installs a router configuration by writing it to /click/config or /click/hotconfig.
+
+The linux kernel driver can steal packets from network devices before Linux gets a chance to handle them, send packets directly to devices, and send packets to Linux for normal processing. Several element classes control how the module receives and transmits packets:
+ + `FromDevice` and `PollDevice` steal packets from devices before Linux processes them,
+ + `ToDevice` sends packets directly to devices, and `ToHost` sends packets to Linux for normal processing.
 
 At one time only one click configuration can be installed by the kernel driver. Installing a new configuration will just replace the current one !
+
+Removing the module or installing a null configuration will restore your machine's default networking behavior.
 
 <tt>elements/linuxmodule</tt> directory contains kernel driver specific elements :
 
@@ -62,4 +75,54 @@ Element | Category | Description
 [ToHost](http://read.cs.ucla.edu/click/elements/tohost) | Host and Socket Communication | sends packets to Linux
 [ToHostSniffers](http://read.cs.ucla.edu/click/elements/fromsocket) | Host and Socket Communication | sends packets to Linux packet sniffers
 
+### Manual loading
 
+click-install CONFIGFILE is equivalent to :
+
+1. Load the proclikefs module with insmod : <code>/sbin/insmod /usr/local/lib/proclikefs.ko</code>
+2. Load the click module with insmod: <code>/sbin/insmod /usr/local/lib/click.ko</code>
+3. Mount the Click filesystem on a directory <tt>/click<tt> using mount. <code>mount -t click none /click</code>
+   NB The Click kernel module installs a symbolic link from /proc/click to /click.
+4. Install a configuration by writing it to /click/config: <code>cat CONFIGFILE > /click/config</code>, for example.
+
+click-uninstall is equivalent to :
+
+1. kill the current router by installing an empty configuration: <code>echo > /click/config </code>
+2. rmmod the click module : <code>/sbin/rmmod click</code>
+3. unmout click filessystem /click : <code>umount /click</code>
+
+### Using Kernel configuration
+
+The click-install command alllows to install a new configuration in kernel mode.
+
+```bash
+sudo click-install [options] [param=value ...] config.click
+```
+
+For instance to install the following configuration named a-dev-test.click :
+
+```c
+define($DEV eth1);
+FromDevice($DEV) -> Print(in) -> Discard;
+```
+
+The command allows to specify parameters values to use in the configuration
+
+```bash
+$ sudo  click-install DEV=eth2 a-dev-test.click
+```
+
+To check that the corresponding click module is installed at kernel level, we can use :
+
+
+```bash
+$ sudo  lsmod | grep click
+click                2474583  0
+proclikefs             14638  4 click
+```
+When the router configuraiton is running in kernel mode, output messages are available in the syslog system file or using the dmesg command :
+
+```bash
+$ cat /proc/kmsg
+$ tail -f /var/log/syslog
+```
