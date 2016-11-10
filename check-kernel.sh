@@ -15,6 +15,9 @@ click-install --version
 ### - /click filesystem is mounted
 ### - a click configuration is written in /proc/click/config
 
+if [ "$(id -u)" != "0" ]; then printf "\nYou need to be root to run this script!!!\n\n"; exit  ; fi
+
+
 printf "\nClick Kernel module\n"
 lsmod | grep click
 

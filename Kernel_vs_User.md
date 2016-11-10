@@ -40,6 +40,7 @@ Element | Category | Description
 
 The click userlevel driver can run a configuration including a `ControlSocket` element. `ControlSocket` element implement a server handling a relatively simple line-based protocol allowing remote client user-level programs to call read or write handlers on the router.
 
+
 ## Kernel driver
 
 http://read.cs.ucla.edu/click/docs/linuxmodule
@@ -60,6 +61,8 @@ The linux kernel driver can steal packets from network devices before Linux gets
  + `FromDevice` and `PollDevice` steal packets from devices before Linux processes them,
  + `ToDevice` sends packets directly to devices, and `ToHost` sends packets to Linux for normal processing.
 
+=> kernel configurations replace normal network processing !!! 
+
 At one time only one click configuration can be installed by the kernel driver. Installing a new configuration will just replace the current one !
 
 Removing the module or installing a null configuration will restore your machine's default networking behavior.
@@ -74,6 +77,12 @@ Element | Category | Description
 [FromHost](http://read.cs.ucla.edu/click/elements/fromhost) | Host and Socket Communication | reads packets from Linux
 [ToHost](http://read.cs.ucla.edu/click/elements/tohost) | Host and Socket Communication | sends packets to Linux
 [ToHostSniffers](http://read.cs.ucla.edu/click/elements/fromsocket) | Host and Socket Communication | sends packets to Linux packet sniffers
+
+
+FromDevice PROMISC option : Boolean. If true, the device is put into promiscuous mode while FromDevice is active. Default is false.
+
+KernelHandlerProxy
+
 
 ### Manual loading
 
@@ -123,6 +132,25 @@ proclikefs             14638  4 click
 When the router configuraiton is running in kernel mode, output messages are available in the syslog system file or using the dmesg command :
 
 ```bash
-$ cat /proc/kmsg
 $ tail -f /var/log/syslog
 ```
+
+## Handlers
+
+In kernel mode as in user mode, it is possible to interact with a running router configuration through handlers.
+Handlers are methods that can be called to retrieve and/or change values ​​at the router configuration or at each configuration item.
+
+However the mode of interaction using handlers differs completely between the 2 modes.
+
+Click in kernel mode uses entries in the Linux /proc filesystem in order to, among others, implement the elements' read and write handlers.
+
+Click kernel handlers relies on a virtual file system <tt> /click </ tt> (similar to the proc filesystem) to communicate between user space and the Linux kernel. Click files in the file system <tt> / click </ tt> are in read/write mode and provide the means to communicate with the kernel entities.
+
+When installing a new kernel configuration with click-install, it mounts the Click file system onto the /click directory. Click creates a number of files under /click (or wherever you have mounted the filesystem), some read-only and some read/write (writable by the superuser). You control the module by writing to these files, which are called handlers. Every element in the current router configuration has a directory under /click.
+
+
+With the userlevel driver, you can interact with the running click configuration using handlers.
+Handlers access is performed through a click controlsocket element. This element opens a control socket that allows other user-level programs to call read or write handlers on the router.
+
+
+

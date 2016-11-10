@@ -34,9 +34,16 @@ A click router configuration is an oriented graph of element where:
 
 To build a router configuration, the user chooses a collection of elements and connects them into a directed graph.
 
-The router configuration is written in the Click language (http://read.cs.ucla.edu/click/docs/language).
+The router configuration is written in the Click language.
 
 To extend a configuration, the user can write new elements or compose existing elements in new ways.
+
+### Click language
+
+(http://read.cs.ucla.edu/click/docs/language)
+
+Click configuration language describes to Click how to process packets.
+The language describes a graph of "elements", or packet processing modules. Click configuration is parsed when starting Click, Click builds object graph of elements.
 
 
 ### Layered Moded in Click
@@ -78,7 +85,6 @@ To install a configuration and load the click kernel module it is required to us
 ```bash
 click-install CONFIGFILE
 ```
-
 
 **WARNING** : The Linux kernel module is known to run (but not necessarily route packets) in kernel versions 2.6.24, 2.6.32, 3.0, 3.2, and 3.5. It should run on intermediate versions as well. *compilation will fail with linux kernek 4.x*
 
@@ -206,6 +212,8 @@ Clicky is a Click GUI using the GTK+ toolkit : http://read.cs.ucla.edu/click/cli
 
 Clicky can show Click configurations as text (with syntax highlighting) or diagrams, and can read and write handlers in live configurations. It can also generate output diagrams in PDF format.
 
+Clicky is capable of interacting live with Click routers, either in the kernel or using the ControlSocket protocol for user-level configurations.
+
 ### Installation
 
 ```bash
@@ -247,10 +255,20 @@ It is also possible to use clicky to display kernel driver configuration current
 $ clicky -k &
 ```
 
-Clicky options:
- * -r option : open the specified click configuration with clicky and run userlevel click engine with it
- * -f option  : open the specified click configuration with clicky (show the configuration graph) without running it.
+### Clicky options
+
+ * -r click-config : open the specified click configuration with clicky and run userlevel click engine with it
+ * -f click-config  : open the specified click configuration with clicky (show the configuration graph) without running it.
  * -k : Read configuration from kernel.
+ * -s ccss_config_FILE : Add CCSS style information from ccss_config_FILE.
+
+### Styling Clicky Diagrams
+
+A powerful Cascading Style Sheets-like language can be used to control the diagram. For instance, elements on the diagram can display live counter values.
+
+clicky-css : CSS-like language used to style Clicky diagrams.
+see http://read.cs.ucla.edu/click/clicky-css
+
 
 ##  click concepts
 
