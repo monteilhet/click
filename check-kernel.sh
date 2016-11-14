@@ -15,13 +15,15 @@ click-install --version
 ### - /click filesystem is mounted
 ### - a click configuration is written in /proc/click/config
 
-if [ "$(id -u)" != "0" ]; then printf "\nYou need to be root to run this script!!!\n\n"; exit  ; fi
 
+printf "\nCheck Click Kernel module\n"
+if [[ `lsmod | grep click` ]] ; then
+  printf "> click module is loaded\n"
+else printf "click is not running at kernel\n" ; exit 1; fi
 
-printf "\nClick Kernel module\n"
-lsmod | grep click
+if [[ `grep click /proc/mounts` ]] ; then
+printf "> click fs is mounted\n"
+else printf "click is not running at kernel" ; exit 1; fi
 
-printf "\nClick fs is mount\n"
-grep click /proc/mounts
-
+printf "> click config :\n"
 cat /proc/click/config

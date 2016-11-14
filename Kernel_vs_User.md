@@ -61,7 +61,7 @@ The linux kernel driver can steal packets from network devices before Linux gets
  + `FromDevice` and `PollDevice` steal packets from devices before Linux processes them,
  + `ToDevice` sends packets directly to devices, and `ToHost` sends packets to Linux for normal processing.
 
-=> kernel configurations replace normal network processing !!! 
+=> kernel configurations replace normal network processing !!!
 
 At one time only one click configuration can be installed by the kernel driver. Installing a new configuration will just replace the current one !
 
@@ -81,7 +81,8 @@ Element | Category | Description
 
 FromDevice PROMISC option : Boolean. If true, the device is put into promiscuous mode while FromDevice is active. Default is false.
 
-KernelHandlerProxy
+The KernelHandlerProxy element used in a userlevel configuration allows to proxy kernel module handlers at user level.
+Used in concjunction with ControlSocket element, it will allow other user-level programs to call read or write handlers on the router installed in kernel mode.
 
 
 ### Manual loading
@@ -150,7 +151,7 @@ When installing a new kernel configuration with click-install, it mounts the Cli
 
 
 With the userlevel driver, you can interact with the running click configuration using handlers.
-Handlers access is performed through a click controlsocket element. This element opens a control socket that allows other user-level programs to call read or write handlers on the router.
+Handlers access is performed through a click controlsocket element. This element opens a control socket that allows other user-level programs to call read or write handlers on the router running at user level.
 
 
 
