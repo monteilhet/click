@@ -1,0 +1,28 @@
+
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-intro.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part1.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part2.html
+
+Implementing the Dummy protocol
+
+Specific elements :
+
+ * DummyProto : define the protocol format
+ * DummyClassifier : element to “classify” the type of the packet
+ * DummyPrinter : element to print the Data
+ * DummyLog : element to log the past Data
+ * DummyAnswer : element to answer (to a response) a packet
+ * DummyRequest : element to generate a request packet
+
+
+
+skel_gen.sh : script to generates “skel” click elements
+
+
+Annotations have multiple types and are additional information on a packet. Those annotations are indexed using byte length and an area is reserved for it in every packet.
+
+
+NB
+A specific syntax is available to ease the configuration of network interfaces: AddressInfo(enp2s0 10.0.0.2 01:02:03:04:05:06);
+you can then use ‘enp2s0’ for the IP or MAC address of a parameter.
+
