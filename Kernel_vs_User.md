@@ -19,7 +19,6 @@ The click program can read and write packets from the network using Berkeley Pac
 User-level `FromDevice` element behaves like a packet sniffer by default since each packet will get processed twice (once by Click, once by the kernel).
 
 
-
 Within the user-level driver, `FromDevice` and `ToDevice` elements used are specific to this mode ( implementation of those elements are located in <tt>elements/userlevel</tt> )
 
 <tt>elements/userlevel</tt> directory contains elements specific to userlevel driver :
@@ -39,6 +38,13 @@ Element | Category | Description
 
 
 The click userlevel driver can run a configuration including a `ControlSocket` element. `ControlSocket` element implement a server handling a relatively simple line-based protocol allowing remote client user-level programs to call read or write handlers on the router.
+
+TIPS
+
+To test that a click configuration is correct without running it, you can use -q option 
+<code>
+click -q invalid.click
+</code>
 
 
 ## Kernel driver
@@ -136,6 +142,34 @@ When the router configuraiton is running in kernel mode, output messages are ava
 $ tail -f /var/log/syslog
 ```
 
+## Using parameters
+
+http://read.cs.ucla.edu/click/docs/language#parameter-definitions
+
+A click configuration can define parameters using <code>define</code>code> statement. The statement takes a pair separated by a comma, each pair defining a configuration variable $VARNAME and the associated value of this variable.
+
+For instance param.click :
+```C
+define($DEVNAME eth0, $COUNT 1);
+Message("use config DEVNAME = $DEVNAME, COUNT = $COUNT, PROTO = $PROTO")
+define($PROTO tcp);  // the definition of variables is global to the configuration and can appear anywhere,
+// here for instance we define the variable after its use in the Message statement.
+Script(stop);
+```
+
+When running the click executable it's possible to redefine parameters in the command line.
+
+```bash
+click DEVNAME=eth1 PROTO=udp param.click
+```
+
+or for a kernel configuration
+
+```bash
+click-install DEV=eth2 test-device-block.click
+```
+
+
 ## Handlers
 
 In kernel mode as in user mode, it is possible to interact with a running router configuration through handlers.
@@ -150,8 +184,18 @@ Click kernel handlers relies on a virtual file system <tt> /click </ tt> (simila
 When installing a new kernel configuration with click-install, it mounts the Click file system onto the /click directory. Click creates a number of files under /click (or wherever you have mounted the filesystem), some read-only and some read/write (writable by the superuser). You control the module by writing to these files, which are called handlers. Every element in the current router configuration has a directory under /click.
 
 
-With the userlevel driver, you can interact with the running click configuration using handlers.
+With the userlevel driver, you can interact with the running click configuration by using handlers.
 Handlers access is performed through a click controlsocket element. This element opens a control socket that allows other user-level programs to call read or write handlers on the router running at user level.
+ControlSockets allow users to connect to the router and call its read and write handlers remotely.
+
+
+see http://read.cs.ucla.edu/click/elements/controlsocket.
+
+
+### Handlers usage
+
++ Generic Handlers
++ Specific Handlers.
 
 
 

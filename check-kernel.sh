@@ -21,6 +21,10 @@ if [[ `lsmod | grep click` ]] ; then
   printf "> click module is loaded\n"
 else printf "click is not running at kernel\n" ; exit 1; fi
 
+if [[ `ls /proc | grep click` ]] ; then
+  printf "> /proc/click symbolic link exists and points to /click\n"
+fi
+
 if [[ `grep click /proc/mounts` ]] ; then
 printf "> click fs is mounted\n"
 else printf "click is not running at kernel" ; exit 1; fi
