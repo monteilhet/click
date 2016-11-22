@@ -1,0 +1,52 @@
+#!/bin/bash
+
+###
+# Uses openbsd variant of netcat
+###
+
+if [ $# -eq 0 ]; then
+  echo "[-] No matching to add..."
+  echo -e "usage\t$0 '<request|answer>' ['<request|answer>' ...]\n"
+  exit 1
+fi
+
+# Host of the control socket
+host="${HOST:?}"
+# Port number of the control socket
+port=${PORT:?}
+# The short element's name (e.g. _not_ flatten by click)
+short_name="${SHORT_NAME:?}"
+# The handler name of the element
+handler_name="${HANDLER_NAME:?}"
+# We wait the following number of seconds before adding the next entry
+sleep_time=2
+
+printf "connect to $host:$port using $short_name element\n"
+
+##
+## Do not modify below
+##
+
+# extract full name from the element list
+full_name=$(echo "READ list" | nc -q 1 ${host} ${port} | grep ${short_name})
+
+if [ "x${full_name}" == "x" ]; then
+  echo "[-] No element named ${short_name} found!"
+  exit 1
+fi
+
+# list all handlers and see if we have it
+handlers_list=$(echo "READ ${full_name}.handlers" | nc -q 1 ${host} ${port})
+
+echo "$handlers_list" | grep -q ${handler_name}
+
+if [ $? -ne 0 ]; then
+  echo "[-] No handler named ${handler_name} for ${full_name}"
+  exit 1
+fi
+
+# The real deal, send the write orders to the handler
+for i in $@; do
+  echo -e "WRITE ${full_name}.${handler_name} ${i}\n" | nc -q 1 ${host} ${port}
+  sleep ${sleep_time}
+done

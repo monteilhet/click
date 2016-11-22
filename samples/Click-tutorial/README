@@ -1,28 +1,94 @@
 
+# Protocol implementation tutorial
+
 https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-intro.html
 https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part1.html
 https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part2.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part3.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part4.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part5.html
+https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part6.html
 
-Implementing the Dummy protocol
+
+# Implementing the Dummy protocol
 
 Specific elements :
 
  * DummyProto : define the protocol format
  * DummyClassifier : element to “classify” the type of the packet
- * DummyPrinter : element to print the Data
+ * DummyPrint : element to print the Data
  * DummyLog : element to log the past Data
  * DummyAnswer : element to answer (to a response) a packet
  * DummyRequest : element to generate a request packet
 
+**DummyPrint**
 
+The role of this element is to print the Data field of any incoming packet. The incoming packets must be stripped of their headers, leaving only the UDP data. To differentiate requests from answers we also want to print the type of packet. Because we are doing this classification we can take the opportunity to set the annotation for the packet.
 
-skel_gen.sh : script to generates “skel” click elements
+A packet consists of a data buffer, which stores the actual packet wire data, and a set of annotations, which store extra information calculated about the packet, such as the destination address to be used for routing. http://read.cs.ucla.edu/click/doxygen/class_packet.html
 
 
 Annotations have multiple types and are additional information on a packet. Those annotations are indexed using byte length and an area is reserved for it in every packet.
 
+We are setting this annotation so the DummyClassifier can dispatch packets to outputs solely based on the annotation value. Because we need our annotation index to be shared between the “getter” (DummyClassifier) and the “setter” (DummyPrint) you need to put it as a constant in a file both elements will include. Therefore, the designated spot is in DummyProto.hh
+
+
+**DummyLog**
+This element is used to display received answers periodically. The reason for this element to exist is to demonstrate the use of Timers and of element configuration (using the configure(...) method).
+
+
 
 NB
-A specific syntax is available to ease the configuration of network interfaces: AddressInfo(enp2s0 10.0.0.2 01:02:03:04:05:06);
+A specific syntax is available to ease the configuration of network interfaces:
+AddressInfo(enp2s0 10.0.0.2 01:02:03:04:05:06);
 you can then use ‘enp2s0’ for the IP or MAC address of a parameter.
+
+
+
+# helper scripts
+
+skel_gen.sh : script to generates “skel” click elements
+add_handler_mapping.sh  : script to add request/handler in click answer element
+
+# Run
+
+Config:
+
+    PC 1: 192.168.1.47
+    PC 2: 192.168.1.89
+    ClickControl handler port for both: 3333
+    Input request port 1234
+
+Start click:
+
+# ~/path_to_click/click -p 3333 ~/path_to_conf/pc1.click
+
+sudo click  -p 3333  IFACENAME=eth0 pc2.click
+
+
+Add answers:
+
+$ export HOST=192.168.1.89
+$ export PORT=3333
+$ export HANDLER_NAME=h_map
+$ export SHORT_NAME=DummyAnswer
+
+$ ./add_handler_mapping.sh 'OOOO|AAAA'
+$ ./read_handler.sh
+
+
+Do the same thing with for pc 2 then send requests:
+
+$ echo -n $(python -c 'print("O"*4)') | netcat -vvv -u 192.168.1.47 1234
+
+
+
+
+
+
+
+
+
+
+
 
