@@ -13,13 +13,14 @@
 define($DEV eth1);
 Message("Handle traffic on $DEV");
 
-
-Out :: ToDevice($DEV, DEBUG true);
-
 // OUTBOUND true => send effectively on todevice
-// METHOD PCAP
+// NB duplicates packet if OUTBOUND true and SNIFFER is true
+// METHOD PCAP ?
 // SNIFFER false <=> KernelFilter(drop dev $DEV)
-// NB duplicates packet if OUTBOUND true
-FromDevice($DEV, SNIFFER true, OUTBOUND false) -> Print(in)  -> Queue ->  Out
+
+// NOK packet arrives in and outbound is ignored
+FromDevice($DEV, SNIFFER true, OUTBOUND false) -> Print(in)  -> Queue -> ToDevice($DEV, DEBUG true);
+
+// Here to loop with SNIFFER False => need to build a ping response
 
 // Test send packet on a different interface for instance to chain box => PROMISC FALSE

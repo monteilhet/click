@@ -1,10 +1,10 @@
 define($IFACENAME enp0s25);
-AddressInfo($IFACENAME 192.168.1.89 d8:9d:67:99:55:8e);
+AddressInfo($IFACENAME 192.168.56.89 d8:9d:67:99:55:8e);
 define($LOCALPORT 1234);
 define($REMOTEPORT 4321);
-define($REMOTEIP 192.168.1.47);
+define($REMOTEIP 192.168.56.47);
 
-FromDevice($IFACENAME)
+FromDevice($IFACENAME, PROMISC true)
   -> cl :: Classifier(12/0800,  // IP packets
       12/0806 20/0002,  // ARP Replies
       12/0806 20/0001 // ARP Queries
@@ -29,6 +29,6 @@ ip_cl[1]
   -> DummyAnswer
   -> udpip_encap;
 
-dummy_cl[1] -> DummyLog;
+dummy_cl[1] -> DummyLog(TICK 10);
 
 dummy_cl[2] -> Discard;

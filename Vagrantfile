@@ -47,7 +47,7 @@ Vagrant.configure(2) do |config|
   config.vm.network :private_network, ip: "192.168.57.21"
 
   config.vm.provider "virtualbox" do |v|
-    v.name = "click_pc1_vm"
+    v.name = "click_pc2_vm"
     v.customize ["modifyvm", :id, "--memory", "1024"]
     v.customize ["modifyvm", :id, "--nictype1", "virtio"]
     v.customize ["modifyvm", :id, "--nictype2", "virtio"]

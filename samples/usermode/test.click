@@ -1,5 +1,7 @@
 // test.click
 
+// basic test to generate some packets
+
 // This configuration should print this line five times:
 // ok:   40 | 45000028 00000000 401177c3 01000001 02000002 13691369
 

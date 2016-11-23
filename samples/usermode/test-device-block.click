@@ -7,8 +7,7 @@
 
 // Run with
 // click [DEV=ethx] testdevice.click
-// (runs as a user-level program; uses Linux packet sockets or a similar
-// mechanism)
+// (runs as a user-level program; uses Linux packet sockets or a similar mechanism)
 
 define($DEV eth1);
 Message("Block traffic on $DEV");

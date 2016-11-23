@@ -14,6 +14,8 @@
 // which is accessible with 'dmesg' and /var/log/messages (or /var/log/syslog).
 // The most recent 2-4K of messages are stored in /click/messages (still working ?).
 
+// ToHost elements allow to reinject packet in the network stack
+
 define($DEV eth1);
 Message("Loop traffic on $DEV");
 FromDevice($DEV) -> Print(in) -> ToHost($DEV);

@@ -48,7 +48,8 @@ The language describes a graph of "elements", or packet processing modules. Clic
 
 ### Layered Moded in Click
 
-"With great power comes great responsibility."
+> "With great power comes great responsibility."
+
  * Click receives raw ethernet frames from Layer 2 and handles all the processing up until it is handed to the higher layers.
  * Click can also handle Transport layer headers such as intercepting UDP and TCP packets making it possible to implement daemons inside Click.
  * The user is in charge of respecting the layered model, not Click.
@@ -270,9 +271,40 @@ clicky-css : CSS-like language used to style Clicky diagrams.
 see http://read.cs.ucla.edu/click/clicky-css
 
 
-
 ## ClickController
 
 ClickController is graphical user interface for interacting with user-level Click configurations via the ControlSocket element.
 
 https://alan-mushi.github.io/2015/03/22/click-using-handlers-in-userlevel.html
+
+```bash
+cd ~/click/apps/ClickController
+javac -d $(DSTDIR) *.java
+```
+
+
+## click samples
+
+Using Vagrant create pc1 and/or pc2 machines
+
+Build click
+```bash
+vagrant ssh pc1
+: install click and tools
+/vagrant/src-install.sh
+/vagrant/kernel-build.sh
+/vagrant/userlevel-build.sh
+/vagrant/clicky-build.sh
+/vagrant/controllerclick-build.sh
+```
+
+**[Dummy protocol sample](samples/Click-tutorial/Readme.md)**
+NB Using pc1 and pc2 machines
+
+Sample configurations for kernel and userlevel are available in samples dir
+
+helper scripts :
+
++ check-kernel.sh
++ test-click.sh
++ clickctrl
