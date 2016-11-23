@@ -97,7 +97,7 @@ click-install CONFIGFILE is equivalent to :
 
 1. Load the proclikefs module with insmod : <code>/sbin/insmod /usr/local/lib/proclikefs.ko</code>
 2. Load the click module with insmod: <code>/sbin/insmod /usr/local/lib/click.ko</code>
-3. Mount the Click filesystem on a directory <tt>/click<tt> using mount. <code>mount -t click none /click</code>
+3. Mount the Click filesystem on a directory <tt>/click</tt> using mount. <code>mount -t click none /click</code>
    NB The Click kernel module installs a symbolic link from /proc/click to /click.
 4. Install a configuration by writing it to /click/config: <code>cat CONFIGFILE > /click/config</code>, for example.
 
@@ -179,9 +179,9 @@ However the mode of interaction using handlers differs completely between the 2 
 
 Click in kernel mode uses entries in the Linux /proc filesystem in order to, among others, implement the elements' read and write handlers.
 
-Click kernel handlers relies on a virtual file system <tt> /click </ tt> (similar to the proc filesystem) to communicate between user space and the Linux kernel. Click files in the file system <tt> / click </ tt> are in read/write mode and provide the means to communicate with the kernel entities.
+Click kernel handlers relies on a virtual file system <tt> /click </tt> (similar to the proc filesystem) to communicate between user space and the Linux kernel. Click files in the file system <tt> /click </tt> are in read/write mode and provide the means to communicate with the kernel entities.
 
-When installing a new kernel configuration with click-install, it mounts the Click file system onto the /click directory. Click creates a number of files under /click (or wherever you have mounted the filesystem), some read-only and some read/write (writable by the superuser). You control the module by writing to these files, which are called handlers. Every element in the current router configuration has a directory under /click.
+When installing a new kernel configuration with click-install, it mounts the Click file system onto the `/click` directory. Click creates a number of files under /click (or wherever you have mounted the filesystem), some read-only and some read/write (writable by the superuser). You control the module by writing to these files, which are called handlers. Every element in the current router configuration has a directory under /click.
 
 
 With the userlevel driver, you can interact with the running click configuration by using handlers.
