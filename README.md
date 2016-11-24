@@ -38,6 +38,8 @@ The router configuration is written in the Click language.
 
 To extend a configuration, the user can write new elements or compose existing elements in new ways.
 
+cf **[Concepts](Click_concept.md)**
+
 ### Click language
 
 (http://read.cs.ucla.edu/click/docs/language)
@@ -285,7 +287,7 @@ javac -d $(DSTDIR) *.java
 
 ## click samples
 
-Using Vagrant create pc1 and/or pc2 machines
+Using Vagrant to create pc1 and/or pc2 machines
 
 Build click
 ```bash
@@ -298,13 +300,15 @@ vagrant ssh pc1
 /vagrant/controllerclick-build.sh
 ```
 
-**[Dummy protocol sample](samples/Click-tutorial/Readme.md)**
+see **[Dummy protocol sample](samples/Click-tutorial/README.md)**
 NB Using pc1 and pc2 machines
 
 Sample configurations for kernel and userlevel are available in samples dir
 
+[Configurations](Click_configuration.md)
+
 helper scripts :
 
-+ check-kernel.sh
-+ test-click.sh
-+ clickctrl
++ `check-kernel.sh`
++ `test-click.sh`
++ `clickctrl`

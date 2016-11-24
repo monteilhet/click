@@ -3,9 +3,11 @@
 
 The dummy protocol is an application protocol and it works on top of UDP. It’s composed of a unique packet type :
 
->+-+-----+-- ~~ --+
- |T| Len |  Data  |
- +-+-----+-- ~~ --+
+```
++-+-----+--~~--+
+|T| Len | Data |
++-+-----+--~~--+
+```
 
 
 + The user will input a string in a “raw UDP packet” from a specific port, generating a dummy request packet
@@ -19,26 +21,24 @@ The dummy protocol is an application protocol and it works on top of UDP. It’s
 
 ## blog articles
 
-
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-intro.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part1.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part2.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part3.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part4.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part5.html
-https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part6.html
-
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-intro.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part1.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part2.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part3.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part4.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part5.html
++ https://alan-mushi.github.io/2015/09/15/Click-Modular-Router-tutorial-part6.html
 
 ## Implementing the Dummy protocol
 
 Specific elements :
 
- * DummyProto : define the protocol format
- * DummyClassifier : element to “classify” the type of the packet
- * DummyPrint : element to print the Data
- * DummyLog : element to log the past Data
- * DummyAnswer : element to answer (to a response) a packet
- * DummyRequest : element to generate a request packet
+* DummyProto : define the protocol format
+* DummyClassifier : element to “classify” the type of the packet
+* DummyPrint : element to print the Data
+* DummyLog : element to log the past Data
+* DummyAnswer : element to answer (to a response) a packet
+* DummyRequest : element to generate a request packet
 
 **DummyLog**
 This element is used to display received answers periodically. The reason for this element to exist is to demonstrate the use of Timers and of element configuration (using the configure(...) method).
@@ -80,30 +80,52 @@ you can then use ‘enp2s0’ for the IP or MAC address of a parameter.
 
 ## helper scripts
 
-skel_gen.sh : script to generates “skel” click elements
-add_handler_mapping.sh  : script to add request/handler in click answer element
++ `skel_gen.sh` : script to generates “skel” click elements
++ `add_handler_mapping.sh`  : script to add request/handler in click answer element
+
++ `run_click_pc1.sh` : run click pc1 in promisc mode
++ `run_click_pc2.sh` : run click pc2 in promisc mode
++ `run_click_pc1_np.sh` : run click pc1 without promisc mode
++ `run_click_pc1_np.sh` : run click pc1 without promisc mode
++ `register_pc2_answer.sh` : register answer /default for msg 'OOOO' on click pc2
++ `send_msg.sh` : from pc2 send a first msg to pc1 /def with data OOOO that will generate the DummyRequest
+
 
 ## Run
 
 Using vagrant config pc1 and pc2 and network link between the 2 machines on eth1 interface (192.168.56.0/24 subnet)
 
-Config:
+### Config
 
-    PC 1: 192.168.56.47
-    PC 2: 192.168.56.89
+If used in promisced mode
+    PC 1: 192.168.56.47 -- 5c:f9:dd:4e:5f:81
+    PC 2: 192.168.56.89 -- d8:9d:67:99:55:8e
+otherwise reuse assigned ip on eth1
+    PC 1: 192.168.56.20
+    PC 2: 192.168.56.21
+
     ClickControl handler port for both: 3333
     Input request port 1234
+
+
+_ARP testing_
+
++ from outside : arping -I vboxnet0 192.168.56.47 -c 1
++ from pc2 : `sudo arping -I eth1 192.168.56.47 -c 1`
++ from pc1 : `sudo arping -I eth1 192.168.56.89 -c 1`
+
+### Test
 
 Start click:
 
 ```bash
 // on pc1
-$ sudo click  -p 3333  IFACENAME=eth1 pc1.click
+$ sudo click  -p 3333  pc1.click
 // on pc2
-$ sudo click  -p 3333  IFACENAME=eth1 pc2.click
+$ sudo click  -p 3333  pc2.click
 ```
 
-Add answers:
+Add answers on pc2:
 ```bash
 $ export HOST=192.168.56.89
 $ export PORT=3333
@@ -114,13 +136,12 @@ $ ./add_handler_mapping.sh 'OOOO|AAAA'
 $ ./read_handler.sh
 ```
 
-
-From pc2 hen send requests:
+From pc2 send requests:
 
 ```bash
-$ echo -n $(python -c 'print("O"*4)') | netcat -vvv -u 192.168.56.47 1234
+$ echo -n "OOOO" | nc -4u -q1 192.168.56.47 1234
+$ echo -n $(python -c 'print("O"*4)') | netcat -u -q1 192.168.56.47 1234
 ```
-
 
 Using ClickController to check config handler
 ```bash
@@ -128,10 +149,23 @@ Using ClickController to check config handler
 
 ```
 
-Test ARP 
+### Test with helper script
 
-+ from outside : arping -I vboxnet0 192.168.56.47 -c 1
-+ from pc2 : arping -I eth1 192.168.56.47 -c 1
+using no promisc config
+
+```bash
+
+pc1> ./run_click_pc1.sh
+
+pc2> ./run_click_pc2.sh
+pc2> ./register_pc2_answer.sh
+pc2> ./register_pc2_answer.sh 'XXXX|BBBB'
+pc2> ./send_msg.sh hello
+pc2> ./send_msg.sh
+pc2> ./send_msg.sh XXXX
+```
+
+
 
 
 
