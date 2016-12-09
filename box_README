@@ -1,0 +1,14 @@
+This vagrant box has been built using s12v/xenial64 vagrant box
+
+Click software (http://read.cs.ucla.edu/click/) is available for userlevel and kernel mode.
+clicky gui tool is also available (=>requires X forwarding)
+
+It has been installed using the following scripts :
+
+* install-click-src-latest.sh
+* build-click-userlevel.sh
+* build-click-kernel.sh
+* build-clicky.sh
+* install-tools.sh
+
+run check-install.sh to show binaries 
