@@ -1,0 +1,46 @@
+Use vagrant configuration to create a test platform
+
+                      +-------------+                               +------------+
++-----------+         |   brctl     |      +------------+           |   brctl    |
+|           |         |   int-br    |      |   Click    |           |   ext-br   |
+|   Cli     |         +----+-----+--+      |   Kernel   |           +--+------+--+
+|           | eth1         |     |    eth1 |  (bridge)  | eth2         |      |
+|           +--------------+     +---------+            +--------------+      |
++-----+-----+ 10.0.11.11                   +------+-----+                     |
+      |                                           |                           |
+      |                                           | eth0 (NAT)                |
+      |  eth0 (NAT)                               + Vagrant mgnt              |
+      +  vagrant mgmt                                            192.168.55.55| eth1
+                                                                       +------+----+
+                                                                       |           |
+                                                                       |           |
+                                                                       |   Srv     |
+                                                                       |           |
+                                                                       +----+------+
+                                                                            |
+                                                                            | eth0 (NAT)
+                                                                            + Vagrant
+
+
+In the host machine launch script install.sh to create int-br and ext-br
+
+host> $ sudo ./install.sh
+
+Create all the VMs using vagrant
+
+host> $ vagrant up
+
+Connect to click vm
+host> $ vagrant ssh click
+
+
+NB init.sh script is automatically run after click vm boot.
+- it installs a click configuration in kernel mode (bridge.click)
+- it also runs at user level kproxy.click that is a kernel proxy click config allowing to proxy commands to the kernel config (using tcp connection on port 8800)
+
+
+From the host machine you can access to the click kernel config using telnet
+host> $ telnet localhost 8800
+
+From vm cli you can ping VM srv (ping 192.168.55.55) and inversely from srv ping cli VM 10.0.11.11
+

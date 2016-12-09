@@ -1,0 +1,19 @@
+Welcome to click test
+
+if using firewall.click : accept only tcp traffic on eth2:8080
+$ sudo click-install DEV=eth2 PORT=8080 firewall.click
+
+start caddy web server on eth2:8181
+$ caddy
+
+From remote try : curl http://192.168.57.20:8181/README
+
+=> traffic is rejected 
+
+test changing Caddyfile configuration and restart server to listen to port 8080
+
+caddy -conf Caddyfile_ok
+
+From remote try : curl http://192.168.57.20:8080/README
+
+=> traffic is allowed

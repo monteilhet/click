@@ -1,0 +1,79 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = " amonteilhet/ubuntu-click-router"
+  config.ssh.insert_key = false
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://p-goodway:3128/"
+    config.proxy.https    = "http://p-goodway:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,192.168.56.20"
+  end
+
+config.vm.define :cli do |m|
+
+  m.vm.box = "ubuntu/trusty64"
+  m.vm.hostname = "cli1"
+  m.vm.network :public_network, bridge: "int-br", ip: "10.0.11.11"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "cli_vm"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+  m.vm.provision "shell", run:"always", inline: "ip route add 192.168.55.0/24 dev eth1"
+# add ipv6 config here
+
+ end
+
+
+ config.vm.define :click do |m|
+
+  m.vm.network :public_network, bridge: "int-br", ip: "10.0.11.254"
+  m.vm.network :public_network, bridge: "ext-br", ip: "192.168.55.254"
+  m.vm.network :forwarded_port, guest: 8800, host: 8800
+
+  m.vm.hostname = "click"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "click_vm"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--nictype3", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+   m.vm.provision "shell", run:"always", inline: "echo 1 > /proc/sys/net/ipv4/ip_forward"
+   # launch click kernel config / and userlevel proxy
+   m.vm.provision "shell", run:"always", path: "init.sh"
+
+ end
+
+ config.vm.define :srv do |m|
+  m.vm.box = "ubuntu/trusty64"
+  m.vm.hostname = "srv"
+  m.vm.network :public_network, bridge: "ext-br", ip: "192.168.55.55"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "srv_vm"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+  m.vm.provision "shell", run:"always", inline: "ip route add 10.0.11.0/24 dev eth1"
+ end
+
+
+end
