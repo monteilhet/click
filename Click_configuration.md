@@ -41,7 +41,7 @@ arpq[0] -> out
 ```
 
 Packet ethernet header size: 12 bytes
-UDP heard size : 8 bytes
+UDP head size : 8 bytes
 
 # Utils
 
