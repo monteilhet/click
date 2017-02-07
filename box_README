@@ -11,4 +11,4 @@ It has been installed using the following scripts :
 * build-clicky.sh
 * install-tools.sh
 
-run check-install.sh to show binaries 
+run check-install.sh to show installed binaries

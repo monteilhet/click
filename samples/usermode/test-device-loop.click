@@ -23,4 +23,4 @@ FromDevice($DEV, SNIFFER true, OUTBOUND false) -> Print(in)  -> Queue -> ToDevic
 
 // Here to loop with SNIFFER False => need to build a ping response
 
-// Test send packet on a different interface for instance to chain box => PROMISC FALSE
+// Test send packet on a different interface for instance to chain box => PROMISC TRUE

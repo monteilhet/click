@@ -7,8 +7,7 @@ cd ~
 git clone https://github.com/kohler/click.git
 cd click
 
-# Kernel driver no more working after this commit with ubuntu with kernel 3.13
-# => patch files for fix
+# Kernel driver with ubuntu with kernel 4.x => patch files for fix
 # sed -i "s/linuxmodule)/linuxmodule false)/" elements/linuxmodule/fromhost.cc
 sed -i "s/linuxmodule false)/linuxmodule)/" elements/linuxmodule/fromdevice.cc
 sed -i "s/extern struct mutex inode_lock;/\/\/extern struct mutex inode_lock;/" linuxmodule/proclikefs.c
