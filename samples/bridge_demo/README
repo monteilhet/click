@@ -1,5 +1,8 @@
 Use vagrant configuration to create a test platform
 
+Sample of an ethernet bridge (L2 routing)
+
+
                       +-------------+                               +------------+
 +-----------+         |   brctl     |      +------------+           |   brctl    |
 |           |         |   int-br    |      |   Click    |           |   ext-br   |
@@ -44,3 +47,5 @@ host> $ telnet localhost 8800
 
 From vm cli you can ping VM srv (ping 192.168.55.55) and inversely from srv ping cli VM 10.0.11.11
 
+
+TODO : setup a user configuration to make a NAT router

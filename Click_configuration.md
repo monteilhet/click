@@ -1,4 +1,31 @@
 
+# Packet classification
+
+
+Packet ethernet header size: 12 bytes (ethernet frame dst:6 src:6 type:2)
+IPV4 header : 20 bytes
+IPV6 header : 40 bytes
+UDP head size : 8 bytes
+
+Using Classifier element
+http://read.cs.ucla.edu/click/elements/classifier
+Using PARAMETER :  offset/value
+
+At offset 12 (in ethernet frame) can filter by type
++ 0x86DD : ipv6
++ 0x0800 : ipv4
++ 0x0806 : ARP
+
+Strip(14) : Remove ethernet header
+
+
+# Utils
+
+CheckIPHeader([OFFSET]) : checks IP header and set annotation
+MarkIPHeader(([OFFSET]) : sets IP header annotation
+
+
+
 # ARP processing
 
 Using click elements :
@@ -39,11 +66,3 @@ Idle -> [0]arpq;
 arpq[0] -> out
 
 ```
-
-Packet ethernet header size: 12 bytes
-UDP head size : 8 bytes
-
-# Utils
-
-CheckIPHeader([OFFSET]) : checks IP header
-MarkIPHeader(([OFFSET]) : sets IP header annotation
