@@ -1,0 +1,93 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "amonteilhet/ubuntu-click-router"
+  config.ssh.insert_key = false
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://p-goodway:3128/"
+    config.proxy.https    = "http://p-goodway:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,10.20.2.100"
+  end
+
+config.vm.define :ub_vmcli do |m|
+
+  m.vm.box = "ubuntu/trusty64"
+  m.vm.hostname = "cli"
+  m.vm.network :private_network, ip: "10.10.2.5"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "ub_vmcli"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+#  m.vm.provision "shell", path: "config/client/install.sh"
+#  m.vm.provision "shell", run:"always", inline: "ip route del default && ip route add default via 10.0.0.1 dev eth1"
+  m.vm.provision "shell", run:"always", inline: "ip route add 10.20.2.0/24 via 10.10.2.10"
+  m.vm.provision "shell", run:"always", inline: "ip -6 addr add fc00:0:10:2::5/64 dev eth1"
+
+  m.vm.provision "shell", run:"always", inline: "ip -6 route add fc00:0:0:2::/64 via fc00:0:10:2::10"
+
+
+ end
+
+config.vm.define :ub_vmsrv do |m|
+
+  m.vm.box = "ubuntu/trusty64"
+  m.vm.hostname = "srv"
+  m.vm.network :private_network, ip: "10.20.2.100"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "ub_vmsrv"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+#  m.vm.provision "shell", path: "config/server/websrv-install.sh"
+#  m.vm.provision "shell", run:"always", inline: "ip route del default && ip route add default via 10.1.0.1 dev eth1"
+  m.vm.provision "shell", run:"always", inline: "ip route add 10.10.2.0/24 via 10.20.2.10"
+  m.vm.provision "shell", run:"always", inline: "ip -6 addr add fc00:0:0:2::1/64 dev eth1"
+  m.vm.provision "shell", run:"always", inline: "ip -6 route add fc00:0:10:2::/64 via fc00:0:0:2::10"
+ end
+
+
+ config.vm.define :ub_br do |m|
+
+  m.vm.network :private_network, ip: "10.10.2.10"
+  m.vm.network :private_network, ip: "10.20.2.10"
+  m.vm.network :forwarded_port, guest: 8800, host: 8801
+
+  m.vm.hostname = "bridge"
+
+  m.vm.provider "virtualbox" do |v|
+    v.name = "ub_br"
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    v.customize ["modifyvm", :id, "--nictype3", "virtio"]
+    v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+   m.vm.provision "shell", run:"always", inline: "echo 1 > /proc/sys/net/ipv4/ip_forward"
+   m.vm.provision "shell", run:"always", inline: "echo 1 > /proc/sys/net/ipv6/conf/all/forwarding"
+   # launch click kernel config / and userlevel proxy
+   m.vm.provision "shell", run:"always", inline: "ip -6 addr add fc00:0:10:2::10/64 dev eth1"
+   m.vm.provision "shell", run:"always", inline: "ip -6 addr add fc00:0:0:2::10/64 dev eth2"
+
+#   m.vm.provision "shell", run:"always", path: "init_box1.sh"
+
+ end
+
+
+end

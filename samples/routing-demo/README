@@ -1,0 +1,41 @@
+Use vagrant configuration to create a platform to test routing bridge (IPV4 & IPV6)
+using click user configuration
+
+
++-----------+                              +------------+
+|           |                              |   Click    |
+|   Cli     |                              |   User     |
+|           | eth1                    eth1 |  (bridge)  | eth2
+|           +------------------------------+            +---------------------+
++-----+-----+ 10.10.2.5          10.10.2.10+------+-----+ 10.20.2.10          |
+      |                                           |                           |
+      |                                           | eth0 (NAT)                |
+      |  eth0 (NAT)                               + Vagrant mgnt              |
+      +  vagrant mgmt                                              10.20.2.100| eth1
+                                                                       +------+----+
+                                                                       |           |
+                                                                       |           |
+                                                                       |   Srv     |
+                                                                       |           |
+                                                                       +----+------+
+                                                                            |
+                                                                            | eth0 (NAT)
+                                                                            + Vagrant
+
+
+
+Create all the VMs using vagrant
+
+host> $ vagrant up
+
+Connect to click vm
+host> $ vagrant ssh ub_br
+
+
+
+
+From the host machine you can access to the click kernel config using telnet
+host> $ telnet localhost 8800
+
+From vm cli you can ping VM srv (ping 10.20.2.100) and inversely from srv ping cli VM 10.10.2.5
+
