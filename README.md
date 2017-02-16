@@ -51,7 +51,7 @@ Click configuration language describes to Click how to process packets.
 The language describes a graph of "elements", or packet processing modules. Click configuration is parsed when starting Click, Click builds object graph of elements.
 
 
-### Layered Moded in Click
+### Layered Model in Click
 
 > "With great power comes great responsibility."
 

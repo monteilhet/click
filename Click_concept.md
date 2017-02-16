@@ -21,11 +21,11 @@ Compound elements:
  * Group elements in larger elements
 
 
-Elements (actually element classes): C++ classes
-Element instantations: C++ objects
+Elements (actually element classes): C++ classes<br>
+Element instantations: C++ objects<br>
 Click router configurations (or short Click routers): text files parsed when starting Click, Click builds object graph of elements
 
-Packets
+Packets:<br>
 Packet consists of payload and annotations (metadata to simplify processing as "post-its" )
 + payload: raw bytes (char*)
 + annotations : packet offset designating IP header, or user defined
