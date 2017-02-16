@@ -1,6 +1,7 @@
 
 # Packet classification
 
+cf samples/usermode/test-classify.click
 
 Packet ethernet header size: 12 bytes (ethernet frame dst:6 src:6 type:2)
 IPV4 header : 20 bytes

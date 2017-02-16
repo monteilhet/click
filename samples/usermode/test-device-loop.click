@@ -13,14 +13,15 @@
 define($DEV eth1);
 Message("Handle traffic on $DEV");
 
-// OUTBOUND true => send effectively on todevice
-// NB duplicates packet if OUTBOUND true and SNIFFER is true
+// OUTBOUND true => send effectively on todevice (<=> reentrant)
+// NB if OUTBOUND true and SNIFFER is true => duplicates packet because the icmp request is reinjected in kernel and handled twice
 // METHOD PCAP ?
 // SNIFFER false <=> KernelFilter(drop dev $DEV)
 
-// NOK packet arrives in and outbound is ignored
+// NOK packet arrives in and outbound is ignored 
 FromDevice($DEV, SNIFFER true, OUTBOUND false) -> Print(in)  -> Queue -> ToDevice($DEV, DEBUG true);
 
-// Here to loop with SNIFFER False => need to build a ping response
+// Here to loop with SNIFFER False => need to build a ping response and handle ARP for instance cf test-arp-ping
+// In user mode ToHost element is not available to reinject packet in the stack of an existing interface (ToHost works only for tun/tap interfaces in userlevel mode)
 
-// Test send packet on a different interface for instance to chain box => PROMISC TRUE
+// Todo: Test send packet on a different interface for instance to chain box => PROMISC TRUE

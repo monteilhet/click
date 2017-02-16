@@ -1,6 +1,6 @@
 Use vagrant configuration to create a test platform
 
-Sample of an ethernet bridge (L2 routing)
+Sample of an ethernet bridge (L2 routing) using kernel config
 
 
                       +-------------+                               +------------+

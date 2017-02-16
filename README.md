@@ -1,6 +1,9 @@
 
 # Click router
 
+Eddie Kohler. Ph.D. thesis (https://en.wikipedia.org/wiki/Eddie_Kohler)
+Click main site : http://read.cs.ucla.edu/click/
+
 ## Quick description
 
 ### Background
@@ -91,6 +94,9 @@ click-install CONFIGFILE
 
 **WARNING** : The Linux kernel module is known to run (but not necessarily route packets) in kernel versions 2.6.24, 2.6.32, 3.0, 3.2, and 3.5. It should run on intermediate versions as well. *compilation will fail with linux kernek 4.x*
 
+NB a vagrant box with Click installed with kernel 4.x : https://atlas.hashicorp.com/amonteilhet/boxes/ubuntu-click-router
+
+
 **WARNING2** : Click linux kernel has been successfully built using ubuntu server 14.04.1 with a kernel 3.13
 NB since click commit c91fc67e3db click no more compile on ubuntu !
 
@@ -138,7 +144,8 @@ $ sudo make install
 $ ### click binaries are installed in /usr/local/bin/
 $ find /usr/local/bin/ -name "click*"
 
-_NB The kernel installation will create two module object files click.ko and proclikefs.ko and place them in the installation directory /usr/local/lib._
+## NB The kernel installation will create two module object files click.ko and proclikefs.ko
+## and place them in the installation directory /usr/local/lib.
 
 
 ### Display version of installed click
@@ -173,7 +180,7 @@ $ sudo click ~/click/conf/delay.click
 For instance, you can run the following to test a basic click configuration running in **kernel mode**
 
 ```bash
-$ sudo click-install ~/click/conf/testdevice.click
+$ sudo click-install -V ~/click/conf/testdevice.click
 ```
 
 The configuration installed in kernel is visible in the <tt>/click</tt> directory
@@ -181,7 +188,7 @@ The configuration installed in kernel is visible in the <tt>/click</tt> director
 The command <code>click-uninstall</code> unload the click module and remove the current configuration (the <tt>/click</tt> directory, then is empty).
 
 ```bash
-$ sudo click-uninstalls
+$ sudo click-uninstall -V
 ```
 
 
@@ -303,12 +310,14 @@ vagrant ssh pc1
 see **[Dummy protocol sample](samples/Click-tutorial/README.md)**
 NB Using pc1 and pc2 machines
 
-Sample configurations for kernel and userlevel are available in samples dir
+Sample configurations for kernel and userlevel are available in `samples` dir
 
-[Configurations](Click_configuration.md)
+[Configurations details](Click_configuration.md)
+
+[Click dev](samples/element/README.md)
 
 helper scripts :
 
 + `check-kernel.sh`
 + `test-click.sh`
-+ `clickctrl`
++ `clickctrl`**

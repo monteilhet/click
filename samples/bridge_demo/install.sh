@@ -7,4 +7,4 @@ brctl addbr int-br
 brctl addbr ext-br
 
 ip link set int-br up
-ip link set ext-br up 
+ip link set ext-br up
