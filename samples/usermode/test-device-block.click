@@ -15,6 +15,6 @@ Message("Block traffic on $DEV");
 
 KernelFilter(drop dev $DEV) // does not drop arp !
 // or use FromDevice option SNIFFER false <=> KernelFilter(drop dev $DEV)
-FromDevice($DEV) -> Print(in) -> Discard;
+FromDevice($DEV) -> Strip(12) -> Print(in) -> Discard;
 
 ControlSocket(tcp,5555);

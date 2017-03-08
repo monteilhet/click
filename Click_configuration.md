@@ -25,6 +25,13 @@ Strip(14) : Remove ethernet header
 CheckIPHeader([OFFSET]) : checks IP header and set annotation
 MarkIPHeader(([OFFSET]) : sets IP header annotation
 
+# KernelFilter
+
+http://read.cs.ucla.edu/click/elements/kernelfilter
+KernelFilter : block kernel from handling packets 
+For userlevel driver, install an iptable rules to drop all incoming packets on a specified device
+Packet are seen in click config , NB ARP is still handled by the stack
+
 
 
 # ARP processing
