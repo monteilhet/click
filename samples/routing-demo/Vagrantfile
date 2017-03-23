@@ -63,9 +63,9 @@ config.vm.define :ub_vmsrv do |m|
 
  config.vm.define :ub_br do |m|
 
-  m.vm.network :private_network, ip: "10.10.2.10"
-  m.vm.network :private_network, ip: "10.20.2.10"
-  m.vm.network :forwarded_port, guest: 8800, host: 8801
+  m.vm.network :private_network, ip: "10.10.2.10", mac: "080027E66744" # "08:00:27:e6:67:44"
+  m.vm.network :private_network, ip: "10.20.2.10", mac: "080027191787" # "08:00:27:19:17:87"
+  m.vm.network :forwarded_port, guest: 8801, host: 8801
 
   m.vm.hostname = "bridge"
 

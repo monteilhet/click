@@ -1,6 +1,7 @@
 // NB require using promisc mode
 // disable routing, no needs to rewrite
 
+ControlSocket(TCP,8801);
 
 // gw 10.20.2.10 (<=> interface with raspi3)
 e0_in :: FromDevice(eth2, PROMISC true); // , OUTBOUND true
@@ -18,25 +19,28 @@ arpq_cl :: ARPQuerier(eth1);
 
 
 nds_gw :: IP6NDSolicitor(fe80::a00:27ff:fe19:1787, 08:00:27:19:17:87);
-nds_cl :: IP6NDSolicitor(fc00:0:10:2::10, 08:00:27:e6:67:44);
+nds_cl :: IP6NDSolicitor(fe80::a00:27ff:fee6:6744, 08:00:27:e6:67:44);
 
+
+// REVIEW needs to handle [3] before [2]
 cls_gw :: Classifier(12/0800,  // IP packets
         12/0806 20/0002,  // ARP Replies
         12/86dd,          // IPV6
-        12/86dd 20/3aff 54/88, // ICMP v6 Neighbor Advertisment
-//      12/0806 20/0001   // ARP Queries
+        12/86dd 20/3aff 54/88 // ICMP v6 Neighbor Advertisment
       );
+//      12/0806 20/0001   // ARP Queries
+
 
 cls_cl :: Classifier(12/0800,  // IP packets
       12/0806 20/0002,  // ARP Replies
-      12/86dd ,         // IPV6
-      12/86dd 20/3aff 54/88, // ICMP v6 Neighbor Advertisment
-//    12/0806 20/0001   // ARP Queries
+      12/86dd,         // IPV6
+      12/86dd 20/3aff 54/88 // ICMP v6 Neighbor Advertisment
       );
+//    12/0806 20/0001   // ARP Queries
 
 
-cls_dest :: IPClassifier(dst 10.20.2.0/24)
-cls_src :: IPClassifier(dst 10.10.2.0/24)
+cls_dest :: IPClassifier(dst 10.20.2.0/24);
+cls_src :: IPClassifier(dst 10.10.2.0/24);
 
 
 cf :: Counter;

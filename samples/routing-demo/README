@@ -31,11 +31,17 @@ host> $ vagrant up
 Connect to click vm
 host> $ vagrant ssh ub_br
 
+cd /vagrant
+sudo ./test.sh # launch click usermode config 
 
+From the host machine you can access to the click config using telnet
+host> $ telnet localhost 8801
 
+From vm cli you can ping VM srv 
+ping 10.20.2.100
+ping6 fc00:0:0:2::1
 
-From the host machine you can access to the click kernel config using telnet
-host> $ telnet localhost 8800
-
-From vm cli you can ping VM srv (ping 10.20.2.100) and inversely from srv ping cli VM 10.10.2.5
+and inversely from srv ping cli VM
+ping 10.10.2.5
+ping6 fc00:0:10:2::5
 
