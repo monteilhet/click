@@ -22,26 +22,31 @@ nds_gw :: IP6NDSolicitor(fe80::a00:27ff:fe19:1787, 08:00:27:19:17:87);
 nds_cl :: IP6NDSolicitor(fe80::a00:27ff:fee6:6744, 08:00:27:e6:67:44);
 
 
-// REVIEW needs to handle [3] before [2]
 cls_gw :: Classifier(12/0800,  // IP packets
         12/0806 20/0002,  // ARP Replies
-        12/86dd,          // IPV6
-        12/86dd 20/3aff 54/88 // ICMP v6 Neighbor Advertisment
+        12/86dd 20/3aff 54/88, // ICMP v6 Neighbor Advertisment
+        12/86dd          // IPV6
       );
+
+// NB ARP Queries and NDP Solicititation are handle by the stack
 //      12/0806 20/0001   // ARP Queries
 
 
 cls_cl :: Classifier(12/0800,  // IP packets
       12/0806 20/0002,  // ARP Replies
-      12/86dd,         // IPV6
-      12/86dd 20/3aff 54/88 // ICMP v6 Neighbor Advertisment
+      12/86dd 20/3aff 54/88, // ICMP v6 Neighbor Advertisment
+      12/86dd         // IPV6
       );
+
+// NB ARP Queries and NDP Solicititation are handle by the stack
 //    12/0806 20/0001   // ARP Queries
 
 
 cls_dest :: IPClassifier(dst 10.20.2.0/24);
 cls_src :: IPClassifier(dst 10.10.2.0/24);
 
+cls6_dest :: Classifier(24/fc00000000000002);
+cls6_src ::  Classifier(24/fc00000000100002);
 
 cf :: Counter;
 cb :: Counter;
@@ -54,13 +59,17 @@ cb6 :: Counter;
 e1_in -> cls_cl -> CheckIPHeader(14) -> cls_dest -> Print("gtw") -> cf -> Strip(14) -> arpq_gw -> qb::Queue -> Print("IP FOR") -> e0_out;
 
 cls_gw[1] -> [1]arpq_gw;
-// cls_gw[2] -> Print("ARP") -> ARPResponder(eth2) -> Print("RARP") -> qb;
+
+// ArpQueries are handled by stack 
+// cls_gw[5] -> Print("ARP") -> ARPResponder(eth2) -> Print("RARP") -> qb;
 
 // check cls6_dest fc00:0:0:2::/64
-cls_cl[2] -> Print("gtw ipv6") -> cf6 -> Strip(14) -> nds_gw -> qb
+cls_cl[3] 
+// -> Print("DBG", 14) 
+-> Strip(14) -> Print("IPv6", 40) -> cls6_dest -> MarkIP6Header(0) -> IP6Print("gtw ipv6") -> GetIP6Address(24) -> cf6 -> nds_gw -> MarkIP6Header(14) -> IP6Print("nds gw ipv6") -> qb
 
-cls_gw[3] -> [1]nds_gw;
 
+cls_gw[2] -> [1]nds_gw;
 
 
 // Back traffic from gw to cl
@@ -68,9 +77,12 @@ e0_in -> cls_gw ->  CheckIPHeader(14) -> cls_src -> Print("cli") -> cb -> Strip(
 
 cls_cl[1] -> [1]arpq_cl;
 
-cls_gw[2] ->  Print("cli ipv6") -> cb6 -> Strip(14) -> nds_cl -> qf;
+cls_gw[3] 
+-> Strip(14) -> Print("IPv6", 40) -> cls6_src -> MarkIP6Header() ->  IP6Print("cli ipv6") -> cb6 ->  GetIP6Address(24) -> nds_cl  -> MarkIP6Header(14) -> IP6Print("nds cl ipv6") -> qf;
 
-cls_cl[3] -> [1]nds_cl;
+cls_gw[3] ->  Print("cli ipv6") -> cb6 -> Strip(14) -> nds_cl -> qf;
+
+cls_cl[2] -> [1]nds_cl;
 
 
 
