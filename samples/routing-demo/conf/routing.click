@@ -1,7 +1,7 @@
 // NB require using promisc mode
 // disable routing, no needs to rewrite
 
-ControlSocket(TCP,8801);
+cts :: ControlSocket(TCP,8801);
 
 // gw 10.20.2.10 (<=> interface with server)
 e0_in :: FromDevice(eth2, PROMISC true); // , OUTBOUND true
@@ -87,8 +87,6 @@ cls_cl[1] -> [1]arpq_cl;
 cls_gw[3] 
 -> Strip(14) -> Print("IPv6", 40) -> cls6_src -> MarkIP6Header() ->  IP6Print("cli ipv6") -> cb6 
 ->  GetIP6Address(24) -> nds_cl  -> MarkIP6Header(14) -> IP6Print("nds cl ipv6") -> qf;
-
-cls_gw[3] ->  Print("cli ipv6") -> cb6 -> Strip(14) -> nds_cl -> qf;
 
 cls_cl[2] -> [1]nds_cl;
 
