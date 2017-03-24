@@ -65,15 +65,18 @@ Vagrant.configure(2) do |config|
 
 # vm to build click box
  config.vm.define :click_box do |config|
-#=begin
+=begin
   if Vagrant.has_plugin?("vagrant-proxyconf")
     config.proxy.http     = ""
     config.proxy.https    = ""
     config.proxy.no_proxy = ""
   end
-#=end
+=end
 
-  config.vm.box = "s12v/xenial64" # build click with kernel 4.4 and ubuntu with Predictable network interface names turned off
+  # "debian/jessie64"
+  $boxname = "s12v/xenial64"
+  config.vm.box = $boxname 
+  # build click with kernel 4.4 and ubuntu with Predictable network interface names turned off
   #config.ssh.insert_key = true
   config.vm.hostname = "click"
 
