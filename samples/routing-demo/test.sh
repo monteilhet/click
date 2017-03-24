@@ -6,4 +6,4 @@ if [ “$(id -u)” != “0” ]; then printf "\nYou need to be root to run this
 echo 0 > /proc/sys/net/ipv4/ip_forward
 echo 0 > /proc/sys/net/ipv6/conf/all/forwarding
 
-click conf/test.click
+click /vagrant/conf/routing.click

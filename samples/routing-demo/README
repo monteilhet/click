@@ -34,6 +34,8 @@ host> $ vagrant ssh ub_br
 cd /vagrant
 sudo ./test.sh # launch click usermode config 
 
+WARNING routing.click uses some ip6 click elements = > requires a click exe built with ipv6 features !!!
+
 From the host machine you can access to the click config using telnet
 host> $ telnet localhost 8801
 
