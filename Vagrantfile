@@ -8,6 +8,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 
+
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
@@ -65,16 +66,17 @@ Vagrant.configure(2) do |config|
 
 # vm to build click box
  config.vm.define :click_box do |config|
-=begin
-  if Vagrant.has_plugin?("vagrant-proxyconf")
+   no_proxy = true
+
+  if Vagrant.has_plugin?("vagrant-proxyconf") && no_proxy
     config.proxy.http     = ""
     config.proxy.https    = ""
     config.proxy.no_proxy = ""
   end
-=end
 
   # "debian/jessie64"
-  $boxname = "s12v/xenial64"
+  # "s12v/xenial64"
+  $boxname = "debian/contrib-jessie64"
   config.vm.box = $boxname 
   # build click with kernel 4.4 and ubuntu with Predictable network interface names turned off
   #config.ssh.insert_key = true

@@ -12,3 +12,5 @@ It has been installed using the following scripts :
 * install-tools.sh
 
 run check-install.sh to show installed binaries
+
+To check files modified in click, cd click ; git status ; git diff
