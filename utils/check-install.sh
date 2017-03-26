@@ -11,7 +11,7 @@ printf "==================\n"
 find /usr/local/sbin/ -name "click*"
 find /usr/local/lib/ -name "*.ko"
 printf "\n"
-click-install --version
+sudo click-install --version
 if [ $? -ne 0 ]; then
   printf "\n${RED} click in kernel mode is not installed${DEF}\n"
 else

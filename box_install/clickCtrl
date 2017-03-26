@@ -1,9 +1,0 @@
-#!/bin/bash
-
-host=${1-localhost}
-port=${2-3333}
-
-java -classpath ~/click/apps/ClickController ClickController $host $port
-
-
-
