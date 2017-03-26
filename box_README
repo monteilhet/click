@@ -1,4 +1,4 @@
-This vagrant box has been built using s12v/xenial64 vagrant box
+This vagrant box has been built using {{name}} vagrant box
 
 Click software (http://read.cs.ucla.edu/click/) is available for userlevel and kernel mode.
 clicky gui tool is also available (=>requires X forwarding)

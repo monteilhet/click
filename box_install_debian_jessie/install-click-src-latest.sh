@@ -7,7 +7,7 @@ cd ~
 git clone https://github.com/kohler/click.git
 cd click
 
-# reacitate fromdevice element
+# reactivate fromdevice element
 sed -i "s/linuxmodule false)/linuxmodule)/" elements/linuxmodule/fromdevice.cc
 
 
