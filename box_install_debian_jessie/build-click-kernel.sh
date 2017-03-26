@@ -6,8 +6,8 @@ cd ~/click
 # => create  /usr/src/linux-headers-$(uname -r)-merged by copying /usr/src/linux-headers-$(uname -r)  /usr/src/linux-headers-xxx-common
 
 # build with kernel 3.x
-sudo ./configure --enable-linuxmodule --disable-userlevel --enable-multithread --enable-ip6 --with-linux=/usr/src/linux-headers-$(uname -r)-merged --with-linux-map=/boot/System.map-$(uname -r)
+sudo ./configure --enable-linuxmodule --disable-userlevel --enable-multithread --enable-ip6 --with-linux=/usr/src/linux-headers-$(uname -r)-merged --with-linux-map=/boot/System.map-$(uname -r) |& tee kernel-configure.log
 
 # NB default install target : /usr/local
-sudo make install
+sudo make install |& tee kernel-build.log
 

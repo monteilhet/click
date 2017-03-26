@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
   end
 
   # "debian/jessie64"
-  # "s12v/xenial64"
+  # "s12v/xenial64" # ubuntu 16
   $boxname = "debian/contrib-jessie64"
   config.vm.box = $boxname 
   # build click with kernel 4.4 and ubuntu with Predictable network interface names turned off

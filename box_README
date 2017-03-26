@@ -9,6 +9,7 @@ It has been installed using the following scripts :
 * build-click-userlevel.sh
 * build-click-kernel.sh
 * build-clicky.sh
+* build-clickcontroller.sh
 * install-tools.sh
 
 run check-install.sh to show installed binaries
