@@ -68,7 +68,7 @@ The language describes a graph of "elements", or packet processing modules. Clic
     * PhD : https://pdos.csail.mit.edu/papers/click:kohler-phd/thesis.pdf
     * Documentation related to user mode and kernel mode and about tools: http://read.cs.ucla.edu/click/docs
     * List of Click available elements: http://read.cs.ucla.edu/click/elements
-
+* tuto : https://github.com/MOSAIC-UA/click_modular_router_lessons
 
 ## Click software
 
@@ -203,6 +203,8 @@ man 5 click : display manual page about click language
 man Print ControlSocket  : display manual page about some click elements
 
 ```
+
+NB Element man documentation is located in /usr/local/share/man/man7/ and automatically has been generated from source using click-elem2man tool
 
 NB This documentation is also online
 

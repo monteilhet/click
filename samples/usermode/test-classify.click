@@ -52,7 +52,7 @@ ip proto udp,
 );
 
 // NB there is no ipv6 classifier => use basic classifier (not using annotations)
-// classifier using packet with ethernet header stripped Offset 6 ( 7h byte) for Next Header
+// classifier using packet with ethernet header stripped Offset 6 ( 7th byte) for Next Header
 clip6 :: Classifier(
 6/3a, // ICMP
 6/06,  // tcp
