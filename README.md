@@ -66,6 +66,7 @@ The language describes a graph of "elements", or packet processing modules. Clic
 * git repository: https://github.com/kohler/click/
 * Docs :
     * PhD : https://pdos.csail.mit.edu/papers/click:kohler-phd/thesis.pdf
+    * Paper : https://pdos.csail.mit.edu/papers/click:tocs00/paper.pdf
     * Documentation related to user mode and kernel mode and about tools: http://read.cs.ucla.edu/click/docs
     * List of Click available elements: http://read.cs.ucla.edu/click/elements
 * tuto : https://github.com/MOSAIC-UA/click_modular_router_lessons
